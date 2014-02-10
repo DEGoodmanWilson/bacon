@@ -1,0 +1,11 @@
+<py-open code="if story.next == None or story.da != story.next.da:"/>
+  <h3>${story.dw}, ${story.da} ${story.mo} ${story.yr}</h3>
+<py-close/>
+
+<div class="blogbody">
+  <h4 class="titleline">${story.title}, ${story.hr}:${story.min}</h4>
+  ${story.body}
+  ${story.updates}
+</div>
+<a href="$url/${story.path_name}.comment">comments</a>
+<hr/>

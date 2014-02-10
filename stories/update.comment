@@ -1,0 +1,2 @@
+<p><strong>Update</strong>: ${update.da} ${update.mo} ${update.yr}, ${update.hr}:${update.min}</p>
+${update.body}

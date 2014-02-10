@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage[pdftex,letterpaper,bookmarks,frenchlinks=true,breaklinks]{hyperref}
+%\hypersetup{linkcolor=black,citecolor=black,filecolor=black,urlcolor=black}
+
+\title{$blog_title}
+\author{\url{$url}\\$blog_author ($blog_author_email)}
+\begin{document}
+
+\maketitle
+
+$stories
+
+\end{document}

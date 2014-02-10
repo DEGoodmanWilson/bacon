@@ -1,0 +1,41 @@
+<py-open code="if story.next == None or story.da != story.next.da:"/>
+  <h3>${story.dw}, ${story.da} ${story.mo} ${story.yr}</h3>
+<py-close/>
+
+<div class="blogbody">
+  <h4 class="titleline">${story.title}, ${story.hr}:${story.min}</h4>
+  ${story.body}
+  ${story.updates}
+</div>
+
+<hr/>
+  ${story.comments}
+<hr/>
+<form method="post" action="$url/${story.path_name}.comment" class="blogbody">
+
+<p>
+<input name="author" size="35" class="right">
+Name:
+</input>
+</p>
+<p>
+<input name="link" size="35" class="right">
+URL/Email (don't forget the <em>http://</em> or <em>mailto:</em>!):
+</input>
+</p>
+<p>
+<input name="title" size="35" class="right">Title (optional):</input>
+</p>
+<p>
+Comments:
+</p>
+<p>
+<textarea name="body" rows="7" cols="50">
+</textarea></p>
+<input type="hidden" name="postwb" value="true" />
+<p><input type="submit" value="Post" /></p>
+
+</form>
+
+</div>
+<hr/>

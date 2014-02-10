@@ -1,0 +1,2 @@
+Welcome!
+<p>Thanks for installing Bacon 1.0. You probably want to know how to use this software; see the on-line <a href="http://bacon.artificial-science.org/documents/">guides</a> for help.

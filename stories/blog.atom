@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed version="0.3" xmlns="http://purl.org/atom/ns#">
+<title>$blog_title</title>
+<link rel="alternate" type="text/html" href="$url" title="$blog_title" />
+<author>
+  <name>$blog_author</name>
+  <url>$blog_author_url</url>
+  <email>$blog_author_email</email>
+</author>
+<tagline>$blog_description</tagline>
+<id>$url</id>
+<generator url="http://bacon.artificial-science.org" version="1.0">Bacon</generator>
+<modified>$ISOtime</modified>
+
+<!-- entries -->
+$stories
+<!-- end entries -->
+
+</feed>

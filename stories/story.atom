@@ -1,0 +1,8 @@
+<entry>
+  <title type="text/html" mode="escaped"><![CDATA[${story.title}]]></title>
+  <link rel="alternate" type="text/html" href="$url/${story.path_name}.html"/>
+  <id>$url,${story.posttime},${story.path_name}</id>
+  <issued>${story.ISOtime}</issued>
+  <modified><py-open code="if len(story.children['updates']) > 0:"/><py-line code="p=story.children['updates'][-1].ISOtime"/>$p<py-clause code="else:"/>${story.ISOtime}<py-close/></modified>
+  <content type="text/html" mode="escaped"><![CDATA[${story.body}${story.updates}]]></content>
+</entry>

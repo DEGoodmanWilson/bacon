@@ -1,0 +1,16 @@
+<div class="writeback">
+<py-line code="c = comment.link" />
+<py-open code="if c=='' or c=='http://':" />
+<h5>${comment.author}${comment.blog_name} wrote</h5>
+<py-clause code="else:" />
+<py-open code="if 'http://' not in c:" />
+<py-line code="c = 'http://'+comment.link" />
+<py-close />
+<h5><a rel="nofollow" href="$c">${comment.author}${comment.blog_name}</a> wrote</h5>
+<py-close />
+<div class="writebackdate">${comment.dw}, ${comment.da} ${comment.mo} ${comment.yr} ${comment.hr}:${comment.min}</div>
+<div class="writebacktitle">${comment.title}</div>
+<div class="writebackbody">${comment.body}</div>
+<a href="$url/${comment.path_name}.leavewriteback">reply</a>
+${comment.replies}
+</div>
