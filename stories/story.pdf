@@ -1,4 +1,4 @@
-<py-open code="if story.next == None or ((story.posttime < story.next.posttime)and(story.da != story.next.da)):"/>
+<py-open code="if story.next == None or story.da != story.next.da or (story.posttime < story.next.posttime and story.mo != story.next.mo and story.yr != story.next.yr):"/>
 \section*{${story.dw}, ${story.da} ${story.mo} ${story.yr}}
 <py-close/>
 

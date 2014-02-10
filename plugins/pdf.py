@@ -34,6 +34,8 @@ class StoryParser(HTMLParser):
       r = ''
     elif tag == 'ul':
       r = '\\begin{itemize}\n'
+    elif tag == 'ol':
+      r = '\\begin{enumerate}\n'
     elif tag == 'li':
       r = '\\item '
     elif tag == 'em' or tag == 'i':
@@ -70,6 +72,8 @@ class StoryParser(HTMLParser):
       r = '\n'
     elif tag == 'ul':
       r = '\\end{itemize}'
+    elif tag == 'ol':
+      r = '\\end{enumerate}'
     elif tag == 'li':
       r = '\n'
     elif tag == 'em' or tag == 'i' or tag == 'strong' or tag == 'em':
@@ -81,6 +85,8 @@ class StoryParser(HTMLParser):
     self.parsedbuffer+=r
 
   def handle_data(self, data):
+    #catch rogue ampersands
+    data = data.replace("&", "\\&")
     self.parsedbuffer+=data
 
 class pdf(Plugin):
@@ -125,7 +131,11 @@ class pdf(Plugin):
       import commands
       self.outfile.close()
       sys.stdout = self.tempout
-      commands.getoutput('cd '+self.path+';'+self.pdflatex+' '+self.uid+'.latex')
+      try:
+        commands.getoutput('cd '+self.path+';'+self.pdflatex+' '+self.uid+'.latex')
+      except:
+        os.remove(os.path.join(self.path,self.uid+'.latex'))
+        return
       infile = file(os.path.join(self.path,self.uid+'.pdf'))
       lines = infile.readlines()
       infile.close()
