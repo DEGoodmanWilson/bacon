@@ -66,7 +66,7 @@ Content-type: text/html
 Very simple.
 Here's the sample blog.html that comes included with Bacon:
 
-```
+```html
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -92,7 +92,7 @@ Now we need a story.html to contain our content. First, a little about the struc
 
 Bacon organizes dynamic content into stories. Each story represents a single piece of information. This document is an example of a story. Each story has a title, a date, a category and some content. When a request is made for Bacon to render a page, there is some set of stories that will get rendered based on the request. The default is to render the 10 most recent stories, regardless of category. One can also ask Bacon to render the stories from only one category (including that category's children), or all the stories from a particular date. Each individual story is rendered according to the story flavour file. Here's the story.html flavour file from the sample flavour:
 
-```
+```html
 <div class="blogbody">
   <h3 class="titleline">${story.title}, ${story.dw}, ${story.da} ${story.mo}, ${story.yr}
      ${story.hr}:${story.min}</h3>
@@ -105,7 +105,7 @@ In this example, we simply create a div containing the story. We put the title o
 This is all very simple; I want something more complex. Let's group stories by date by only printing the date when it changes between stories. That is, I don't want a particular date to render to the screen more than once; if more than one story was posted on the same day, they will share a date header. We can easily specify the conditions under which a bit of our HTML is rendered by calling upon Python. First, though, we have to explore a particular issue. The story variable is really an alias. Bacon maintains a linked list of all stories to be rendered. story is just a pointer to the current element in that list being rendered. This way, we don't have to know anything about the story order in our story flavour file: otherwise, we'd have to have a seperate flavour file for each story! This won't do. However, we can reference this list; moreover, we know the current story's position in the list through the ${story.prev} and ${story.next} variables.
 
 With that in mind, here is how one executes a Python conditional:
-```
+```html
   <py-open code="if cond:"/>
     HTML to include if "cond" is true
   <py-clause code="else:"/>
@@ -114,7 +114,7 @@ With that in mind, here is how one executes a Python conditional:
 ```
 Knowing all this, we can construct a date header that only prints once for each day, rather than once for each story.
 Here is the final story.html code, then:
-```
+```html
   <py-open code="if story.next == None or story.da != story.next.da:"/>
     <h3>${story.dw}, ${story.da} ${story.mo} ${story.yr}</h3>
   <py-close/>
@@ -127,7 +127,7 @@ Here is the final story.html code, then:
 ```
 This is much the same as before, except we've added a Python condition. If the story is the first story (the story at the top of the page; that is, there is no next story in the linked list), print the date header. Otherwise, if the story's day of posting is different from the next story (one story up). Otherwise, don't. I've also added a call to insert any updates to the story that are present; we'll cover updating stories in the section on creating stories.
 Of course, you can use arbitrary Python code in your flavours and your stories, using the py-line element:
-```
+```html
   <py-line code="put python code here"/>
 ```
 Any variables created or modified are remembered for the remainder of the rendering session, so you can create a new variable in the head.html, and it will still be valid in the foot.html; of course you can reference it using the $ notation as well.
@@ -135,6 +135,126 @@ Lastly, at the very least, you should create empty update.html and comment.html 
 
 The rest of the flavours work similarly; I'll leave the creation of new ones an excercise for the reader; have a look at the samples provided for guidance.
 
+Variable Reference
+------------------
+
+Variables are prepended with a "$"; scoped variables (variables with a "." in them) must also have curly braces around them. For example, the blog_title variable should be used as "$blog_title"; a story title is referenced as "${story.title}".
+
+###User-configurable Variables
+$blog_title-this contains the title of the site as you specified when configuring the program.
+
+$blog_description-this is the, as it appears to be, site description.
+
+$blog_language-the two-letter language identifier. Currently not used internally, but you could possibly use it in the content_type.flav template.
+
+$blog_author-you. Or the person you're setting the blog up for.
+
+$url-the base URL of the site. Useful for constructing complete URL's for permalinks (permanent links: links that do not change over time) without having to hard-code anything in.
+
+###Other Global Variables
+$flavour-the current flavour being used. Note the British spelling. It's my own personal bad habit. Deal.
+
+$start-the ordinal number of the first story. Bacon maintains an internal list of all stories that should be considered for rendering, then chops it so there aren't too many on the page. This variable allows you to access subsequent pages worth of stories from the list.
+
+###Story Variables
+These variables are only available in the story.flav template, and give access to elements of individual stories.
+
+${story.title}-the story title.
+
+${story.body}-the guts of the story.
+
+${story.path}-the "category" of a story; it is essentially the subdirectory the original text file is stored in. Note that there is no initial /.
+
+${story.name}-the filename of a story sans extension.
+
+${story.path_name}-the os-dependent concatenation of path and filename sans extension. Handy shortcut.
+
+${story.posttime}-the time the story was authored, in seconds since midnight, 1 Jan 1970. Useful for sorting stories, but not much else.
+
+${story.yr}-the year the story was posted.
+
+${story.mo}-the month (name) the story was posted.
+
+${story.mo_num}-the month (number) the story was posted.
+
+${story.da}-the date the story was posted.
+
+${story.dw}-the day of the week the story was posted.
+
+${story.hr}-the hour the story was posted.
+
+${story.min}-the minute the story was posted.
+
+${story.ISOtime}-the time the story was posted as an ISO formatted string. Useful for creating RSS and Atom feeds, and for geeks, but not much else.
+
+${story.updates}-any posted updates to the story; requires the presence of an update.flav template in your flavour.
+
+${story.lastupdate}-post time of the last update to a story in number of seconds since midnight, 1 Jan 1970. If no updates set to 0.
+
+${story.comments}-any posted comments to the story; requires the presence of a comment.flav template in your flavour.
+
+${story.lastcomment}-post time of the last comment to a story in number of seconds since midnight, 1 Jan 1970. If no comments set to 0.
+
+${story.num_comments}-the number of comments posted to a story.
+
+${story.next}-The next story in the current list of stories, where next means newer.
+
+${story.prev}-The previous story in the current list of stories, where previous means older
+
+###Update Variables
+These can only be used in the update.flav template file.
+
+${update.title}-the title of the update.
+
+${update.body}-the body of the update.
+
+${update.posttime}-the time the update was posted, in number of seconds since midnight, 1 Jan 1970.
+
+${update.yr}-the year the update was posted.
+
+${update.mo}-the month (name) the update was posted.
+
+${update.mo_num}-the month (number) the update was posted.
+
+${update.da}-the date the update was posted.
+
+${update.dw}-the day of the week the update was posted.
+
+${update.hr}-the hour the update was posted.
+
+${update.min}-the minute the update was posted.
+
+${update.ISOtime}-the time the update was posted as an ISO formatted string. Useful for creating RSS feeds, but not much else.
+
+###Comment Variables
+These can only be used in the comment.flav template file.
+
+${comment.author}-the comment author.
+
+${comment.url}-the comment author's webpage or e-mail URL.
+
+${comment.title}-the comment title.
+
+${comment.body}-the comment body.
+
+${comment.posttime}-the comment post time (in number of seconds since...blah blah blah).
+
+${comment.replies}-replies to the current comment.
+
+FAQ
+---
+
+Q: I've installed Bacon, and now the URL to my site is not only ugly, it defies W3C reccomendations. Is there any way to remove the cgi-bin/bacon.cgi crap from my URL?
+
+A: If you're running Apache, and if the admin has turned on the URL rewrite engine, then yes, there is. Create a file called .htaccess in the root folder for you HTML documents that looks like this:
+```
+RewriteEngine on
+RewriteRule ^$ /cgi-bin/bacon.cgi/1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /cgi-bin/bacon.cgi/1 [L,QSA]
+```
+This will turn URLS that look like http://www.mysite.com/ into the form http://www.mysite.com/cgi-bin/bacon.cgi invisibly: your visitors will never know otherwise (such rewrites are in use on this site, for example). the lines ending in -f and -d above ensure that if a request is made for a file or folder that really does exist, then the URL will not be rewritten, so existing documents in your website can still be accessed. However, it does mean that requests that would normally have resulted in a 404 Not Found error are passed as paramters to bacon.cgi which may or may not be desirable; in the future we may write a 404 plugin for Bacon to handle these situations
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/DEGoodmanWilson/bacon/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
